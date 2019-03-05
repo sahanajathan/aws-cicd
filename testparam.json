@@ -1,0 +1,7 @@
+{
+  "Parameters" : {
+    "AutomationFunction" : "Exportlambda",
+    "ExportFunction" : "emailpy",
+    "Bucket" : "lambda-upload-poc"
+  }
+}

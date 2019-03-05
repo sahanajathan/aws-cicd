@@ -1,0 +1,69 @@
+{
+   "AWSTemplateFormatVersion": "2010-09-09",
+   "Parameters": {
+   
+   "RoleName":{
+   "Type" : "String",
+   "Description" : "Enter the Role Name you want to create"
+   
+   }
+   
+   },
+   
+   "Resources": {
+      "CICDSubInstanceProfile": {
+         "Type": "AWS::IAM::Role",
+         "Properties": {
+            "AssumeRolePolicyDocument": {
+               "Version" : "2012-10-17",
+               "Statement": [ {
+                  "Effect": "Allow",
+                  "Principal": {
+                     "Service": [ "ec2.amazonaws.com" ]
+                  },
+                  "Action": [ "sts:AssumeRole" ]
+               } ]
+            },
+            "Path": "/",
+            "Policies": [ {
+               "PolicyName": {"Ref" : "RoleName"},
+               "PolicyDocument": {
+                  "Version" : "2012-10-17",
+                  "Statement": [ {
+                     "Effect": "Allow",
+                     "Action": ["cloudwatch:*",
+								"s3:*",
+								"ec2:*",
+								"ssm:*",
+								"ec2messages:*",
+								"ssmmessages:*",
+								"logs:*",
+								"lambda:*",
+								"elasticache:*"
+							   ],
+                     "Resource": "*"
+                  },
+				{
+					"Effect" : "Deny",
+					"Action" : ["ec2:StartInstances",
+								"ec2:RunInstances",
+								"ec2:StopInstances"],
+					"Resource" : "*"
+				
+				}
+				  ]
+               }
+               } ]
+            }
+      },
+      "RootInstanceProfile": {
+         "Type": "AWS::IAM::InstanceProfile",
+         "Properties": {
+            "Path": "/",
+            "Roles": [ {
+               "Ref": "CICDSubInstanceProfile"
+            } ]
+         }
+      }
+   }
+}
