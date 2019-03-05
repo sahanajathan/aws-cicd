@@ -1,7 +1,5 @@
 {
   "Parameters" : {
-    "AutomationFunction" : "Exportlambda",
-    "ExportFunction" : "emailpy",
-    "Bucket" : "lambda-upload-poc"
-  }
+    "RoleName" : "CICDRole"
+	}
 }

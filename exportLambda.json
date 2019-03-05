@@ -1,0 +1,63 @@
+{
+   "AWSTemplateFormatVersion": "2010-09-09",
+   
+    "Parameters": {
+   
+   "RoleName":{
+   "Type" : "String",
+   "Description" : "Enter the Role Name you want to create"
+   
+   }
+   
+   },
+   
+   "Resources": {
+      "Stack1":{
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "https://github.com/sahanajathan/aws-cicd/blob/master/Instanceprofile.json",
+        "Parameters": {
+          "RoleName": {
+            "Ref": "RoleName"
+          }}
+        }
+      },
+      "RootRole": {
+         "Type": "AWS::IAM::Role",
+         "Properties": {
+            "AssumeRolePolicyDocument": {
+               "Version" : "2012-10-17",
+               "Statement": [ {
+                  "Effect": "Allow",
+                  "Principal": {
+                     "Service": [ "ec2.amazonaws.com" ]
+                  },
+                  "Action": [ "sts:AssumeRole" ]
+               } ]
+            },
+            "Path": "/",
+            "Policies": [ {
+               "PolicyName": "ec2policy",
+               "PolicyDocument": {
+                  "Version" : "2012-10-17",
+                  "Statement": [ {
+                     "Effect": "Allow",
+                     "Action": ["ec2:*",
+					"kms:*"],
+                     "Resource": "*"
+                  } ]
+               }
+               } ]
+            }
+      },
+      "RootInstanceProfile": {
+         "Type": "AWS::IAM::InstanceProfile",
+         "Properties": {
+            "Path": "/",
+            "Roles": [ {
+               "Ref": "RootRole"
+            } ]
+         }
+      }
+   }
+}
