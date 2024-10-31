@@ -1,0 +1,19 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.x  # Adjust according to your needs
+    commands:
+      - echo Installing AWS CLI
+      - pip install awscli
+  build:
+    commands:
+      - echo Validating CloudFormation template
+      - aws cloudformation validate-template --template-body file://InstanceProfile.json
+      - echo Creating/Updating CloudFormation stack
+      - aws cloudformation deploy --template-file InstanceProfile.json --stack-name your-stack-name --capabilities CAPABILITY_NAMED_IAM
+
+artifacts:
+  files:
+    - '**/*'
